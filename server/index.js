@@ -1,7 +1,7 @@
 
 import "dotenv/config";
-import express from 'express';
 import cloudinary from '../utils/cloudinary.js';
+import express from 'express';
 import images from '../routes/images.js';
 
 const app = express();
@@ -13,19 +13,26 @@ app.get("/", (req,res)=>{
     res.json("server is woring :)")
  });
 
-app.post('/',async(req,res)=>{
+ app.get('/uploaded', async(req,res)=>{//add name(Test) of the folder in properties
+    const {resources} = await cloudinary.v2.search.expression('folder:Test').sort_by('public_id','desc').max_results(30).execute();
+    const publicIds = resources.map((file) => file.public_id)
+    console.log(publicIds)
+    res.send(publicIds)
+ });
+
+ app.post('/api/upload', async(req, res) => {
     try {
         const fileStr = req.body.data;
-        const uploadedResponce = await cloudinary.v2.uploader.upload(fileStr, 
-                                         {upload_preset: "ml_default"})
-        console.log(uploadedResponce) 
-        res.json({msg:"Doneeee"})                 
-       }catch (error) {
-         res.status(500).json({err:'Something went wrong'})  
-       }
-});
-
-
+        const uploadResponse = await cloudinary.uploader.upload(fileStr,{
+            upload_preset: 'qrtsz1jb' 
+       });
+        console.log(uploadResponse)
+        res.json({ msg: 'yaya' });
+     }catch (err) {
+        console.error(err);
+        res.status(500).json({ err: 'Something went wrong' });
+    }
+ });
 app.use('/images' , images)
 
 const PORT =  3001

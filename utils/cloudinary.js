@@ -1,7 +1,5 @@
 import "dotenv/config";
-
-//const cloudinary = require('cloudinary').v2
-import cloudinary from 'cloudinary' // ES6
+import  cloudinary  from 'cloudinary' // ES6 this is the way that make cloudinary works 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME ,
     api_key: process.env.CLOUDINARY_API_KEY ,
@@ -9,7 +7,7 @@ cloudinary.config({
 });
 
 //module.exports = { cloudinary };
-export default {cloudinary} // ES6
+export default cloudinary// ES6
 
 
 
